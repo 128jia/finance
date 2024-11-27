@@ -1,9 +1,10 @@
 <html> 
     <header>
+        
         {% include "includes/header.html" %}
         {% if request.user.is_authenticated %}
             <div>
-                <p style="text-align:right;">Hello, {{request.user}} !&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p style="text-align: right; font-family: 'Roboto', sans-serif; font-size: 21px; font-weight: 400; color: #333;margin-top: 20px;padding-right: 80px;">Login:   {{request.user}} &nbsp;&nbsp;&nbsp;&nbsp;</p>
             </div>
         {% endif %}
     </header>

@@ -32,3 +32,4 @@ tzdata==2024.2
 urllib3==2.2.3
 webencodings==0.5.1
 yfinance==0.1.70
+mysqlclient==2.2.4

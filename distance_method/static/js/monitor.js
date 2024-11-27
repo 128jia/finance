@@ -124,8 +124,8 @@ function run_monitor_analysis(track_row){
                     $(nRow).find("td:eq(0)").css("background-color", "paleturquoise");
                     $(nRow).find("td:eq(1)").css("background-color", "paleturquoise");
                   } else {
-                    $(nRow).find("td:eq(0)").css("background-color", "MistyRose");
-                    $(nRow).find("td:eq(1)").css("background-color", "MistyRose");
+                    $(nRow).find("td:eq(0)").css("background-color", "ime");
+                    $(nRow).find("td:eq(1)").css("background-color", "ime");
                   }
                 },
             });
@@ -167,8 +167,8 @@ function run_monitor_analysis(track_row){
                     $(nRow).find("td:eq(0)").css("background-color", "paleturquoise");
                     $(nRow).find("td:eq(1)").css("background-color", "paleturquoise");
                   } else {
-                    $(nRow).find("td:eq(0)").css("background-color", "MistyRose");
-                    $(nRow).find("td:eq(1)").css("background-color", "MistyRose");
+                    $(nRow).find("td:eq(0)").css("background-color", "ime");
+                    $(nRow).find("td:eq(1)").css("background-color", "ime");
                   }
                 },
             });

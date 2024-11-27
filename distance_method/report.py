@@ -18,7 +18,7 @@ class ReportHandler(object):
         self.mail = MailHandler()
         self.uth = UserTrackingHandler()
         self.fc = FuncClient()
-        
+        print("report init start!")
         
         self.email_folder_path = Path.cwd() / "common" / "email_reports"
         self.tracker_folder_path = Path.cwd() / "common" / "tracker_results"        

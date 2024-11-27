@@ -11,7 +11,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
-
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -54,72 +54,66 @@
     </head>
 
     <body>
-        <div align=center class="container-fluid" style="margin-top:2%">    
-            <div class="col-18 mx-auto">
-                <div class="card" style="width: 80%;"> 
-                    <div class="card-header">
-                        <h4 style="text-align:left"><b><i class="fas fa-user-cog"></i> Params</b></h4> 
+        <div align=center class="container-fluid" style="margin-top:2%">
+            <div class="nav nav-tabs" id="function-tabs">
+                <div class="nav-item">
+                    <button class="nav-link active" id="distance-method-tab" data-target="#distance-method" style="background-color: #1E90FF; color: white;">Distance_Method</button>
+                </div>
+                <div class="nav-item">
+                    <button class="nav-link" id="other-method-tab" data-target="#other-method" style="background-color: #1E90FF; color: white;">Other_Method</button>
+                </div>
+                <div class="nav-item">
+                    <button class="nav-link" id="backtrader-tab" data-target="#backtrader" style="background-color: #1E90FF; color: white;">Backtrader</button>
+                </div>
+            </div>  
+            {% comment %} Distance Method   {% endcomment %}
+            <div class="tab-content col-18 mx-auto" id ="distance-method">
+                <div class="card" style="width: 80%; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                    <div class="card-header bg-primary text-white" style="border-radius: 8px 8px 0 0;">
+                        <h4 style="text-align: left; margin: 0;">
+                            <b><i class="fas fa-user-cog"></i> Fill the Form</b>
+                        </h4>
                     </div>
-                    <h4 style="text-align:center"><b><i class="fas fa-user-cog"></i>Distance method</b></h4> 
+                    {% comment %} Distance Form {% endcomment %}
                     <div class="card-body">
                         <div class="container-fluid">
-                            
-                            <div class="row" style="width: 60%;">
-                                <br>
-
-                                
-                                <div class="col-md-6">
-                                    <p><br></p>
+                            <div class="row" style="width: 100%; margin-top: 20px;">
+                                <div class="col-md-6" style="margin-bottom: 20px;">
+                                    <label class="d-block" for="stock1-distance" style="font-weight: bold;">Stock 1</label>
+                                    <input class="form-control text-center" style="width: 50%; margin: 0 auto;" type="text" id="stock1-distance" value="AAPL" required>
                                     
-                                    <label class="d-block" for="amount">Stock1</label>
-                                    <input style="text-align: center; width:30%" type="text" id="stock1-distance" name="value" min="" max="" step="" value="AAPL"  required>
-                                    <p class="d-block"></p>
-                                    <br>
-
-                                    <label class="d-block" for="amount">Start Date</label>
-                                    <input id='start_date-distance' type="date" value="2021-01-01" />
-                                    <p class="d-block"></p>
-                                    <br>
-                                    
-                                    <label class="d-block" for="amount">n * std</label>
-                                    <input style="text-align: center; width:50%" type="text" id="std-distance" name="value" min="0.5" max="10" step="0.5" value="2"  required>
-                                    <p class="d-block"></p>
-                                    <br>
+                                    <label class="d-block mt-4" for="start_date-distance" style="font-weight: bold;">Start Date</label>
+                                    <input class="form-control" style="width: 50%; margin: 0 auto;" id="start_date-distance" type="date" value="2021-01-01">
+                
+                                    <label class="d-block mt-4" for="std-distance" style="font-weight: bold;">n * std</label>
+                                    <input class="form-control text-center" style="width: 50%; margin: 0 auto;" type="text" id="std-distance" value="2" required>
                                 </div>
-                                
-                                <div class="col-md-6">
-                                    <p><br></p>
-                                    
-                                    <label class="d-block" for="amount">Stock2</label>
-                                    <input style="text-align: center; width:30%" type="text" id="stock2-distance" name="value" min="" max="" step="" value="GLD"  required>
-                                    <p class="d-block"></p>
-                                    <br>
-
-                                    <label class="d-block" for="amount">End Date</label>
-                                    <input id='end_date-distance' type="date" value="2024-01-01" />
-                                    <p class="d-block"></p>
-                                    <br>
-                                    
-                                    <label class="d-block" for="amount">Window size</label>
-                                    <input style="text-align: center; width:50%" type="text" id="window_size-distance" name="value" min="0.5" max="" step="" value="200"  required>
-                                    <p class="d-block"></p>
-                                    <br>
+                
+                                <div class="col-md-6" style="margin-bottom: 20px;">
+                                    <label class="d-block" for="stock2-distance" style="font-weight: bold;">Stock 2</label>
+                                    <input class="form-control text-center" style="width: 50%; margin: 0 auto;" type="text" id="stock2-distance" value="GLD" required>
+                
+                                    <label class="d-block mt-4" for="end_date-distance" style="font-weight: bold;">End Date</label>
+                                    <input class="form-control" style="width: 50%; margin: 0 auto;" id="end_date-distance" type="date" value="2024-01-01">
+                
+                                    <label class="d-block mt-4" for="window_size-distance" style="font-weight: bold;">Window Size</label>
+                                    <input class="form-control text-center" style="width: 50%; margin: 0 auto;" type="text" id="window_size-distance" value="200" required>
                                 </div>
                             </div>
                         </div>
                     </div>
-        
-                    <div class="card-footer text-muted">
-                        <button  class="btn btn-primary"  id="distance_submit" name="" type="button" >submit</button>
-                        <button  class="btn btn-success"  id="distance_add_track" name="" type="button" >add track</button>
-        
-                        <div class="circle" id="distance_circle" align=center style="display: none;">
-                            <span class="spinner-border"></span>
-                            <span class="load"></span>
-                            <span>Wait for searching...</span>
+                
+                    <div class="card-footer text-muted text-center" style="border-radius: 0 0 8px 8px;">
+                        <button class="btn btn-primary mr-2" id="distance_submit" type="button">Submit</button>
+                        <button class="btn btn-success" id="distance_add_track" type="button">Add Track</button>
+                
+                        <div class="circle mt-3" id="distance_circle" style="display: none;">
+                            <div class="spinner-border text-primary"></div>
+                            <span class="load">Wait for searching...</span>
                         </div>
                     </div>
                 </div>
+                
                 <br>
                 
                 <!-- Startegy Signals -->
@@ -166,6 +160,221 @@
                     </div>
                 </div>
                 <br>
+            </div>
+            <!-- other-method -->
+            <div id="other-method" class="tab-content mt-3 d-none">
+                <div class="card" style="width: 80%; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"> <!-- 控制卡片的最大宽度 -->
+                    <div class="card-header fs-5 fw-bold">
+                        RSI-CROSS
+                    </div>
+                    <div class='card-body'>
+                        <form id="ajax_form">
+                            {% csrf_token %}    
+                            <!-- 股票代號和策略選擇 -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="stock1" class="form-label">Stock_no</label>
+                                        <input type="text" class="form-control" id="stock1" name="stock1" value="2330">
+                                    </div>
+                                </div>
+            
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="strategy" class="form-label">策略選擇</label>
+                                        <select id="strategy" name="strategy" class="form-select">
+                                            <option value="RSI">RSI黃金交叉策略</option>
+                                            <option value="low_high">低買高賣策略</option>
+                                            <option value="MACD">MACD策略</option>
+                                            <option value="RSI_overbuy">RSI超買超賣策略</option>
+                                            <option value="MA">均線多排策略</option>
+                                            <option value="single_MA">單一均線策略</option>
+                                            <option value="MA_ATR">均線搭配ATR交叉策略</option>
+                                            <option value="breakout">追突破策略</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- RSI參數輸入 -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">Short_RSI</span>
+                                        <input type="number" class="form-control" id="short_rsi" name="short_rsi" value="5">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">Long_RSI</span>
+                                        <input type="number" class="form-control" id="long_rsi" name="long_rsi" value="20">
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- 開始日期和結束日期 -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="start_date" class="form-label">Start_date</label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date" required value="2021-01-01">
+                                </div>
+            
+                                <div class="col-md-6">
+                                    <label for="end_date" class="form-label">end_date</label>
+                                    <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                </div>
+                            </div>
+                        </form>
+            
+                        
+                        <button class="btn btn-secondary mt-3" id="submit2" style="background-color:#1E90FF; color: #ffffff; border: none; font-weight: bold;">Submit</button>
+                        <hr>
+            
+                        <!-- 表格显示 -->
+                        <table id="datatable" class="display" style="width:100%">
+                            <thead id="table-head">
+                                <tr>
+                                    <!-- 表格標題 -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 表格數據 -->
+                            </tbody>
+                        </table>
+                        <div id="container" style="width:100%; height:400px;"></div>
+                        <div id="container2" style="width:100%; height:400px;"></div>
+                        <div id="performance-table"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Backtrader -->
+            <div id="backtrader" class="tab-content mt-3 d-none">
+                <div class="card" style="width: 80%; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                    <div class="card-header fs-5 fw-bold">
+                        股票進出場回測
+                    </div>
+                    <div class='card-body'>
+                        <form id="ajax_form" method="post">
+                            {% csrf_token %}
+                            <!-- 股票代號和策略選擇 --><!-- 單筆下單股數 -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Backtrader_stock" class="form-label">Select stock: <i class="bi bi-info-circle"></i></label>
+                                        <input type="text" class="form-control" id="Backtrader_stock" name="Backtrader_stock" value="2330">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="order_units" class="form-label">單筆下單股數:</label>
+                                        <input type="number" class="form-control" id="order_units" name="order_units" value="1000">
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- 策略退出選擇 -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="exit_strategy" class="form-label">Select exit Strategy: <i class="bi bi-info-circle"></i></label>
+                                        <select id="exit_strategy" name="exit_strategy" class="form-select">
+                                            <option value="RSI_death">RSI死亡交叉</option>
+                                            <!-- 可以添加其他選項 -->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="strategy" class="form-label">Select entry Strategy: <i class="bi bi-info-circle"></i></label>
+                                        <select id="strategy" name="strategy" class="form-select">
+                                            <option value="RSI">RSI黃金交叉策略</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- RSI參數輸入 -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Backtrader_short_rsi" class="form-label">短期RSI週期:</label>
+                                        <input type="number" class="form-control" id="Backtrader_short_rsi" name="Backtrader_short_rsi" value="5">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Backtrader_long_rsi" class="form-label">長期RSI週期:</label>
+                                        <input type="number" class="form-control" id="Backtrader_long_rsi" name="Backtrader_long_rsi" value="20">
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- 資金與手續費 -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="capital" class="form-label">初始資金:</label>
+                                        <input type="number" class="form-control" id="capital" name="capital" value="1000000">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="fee" class="form-label">手續費 : (%)</label>
+                                        <input type="number" class="form-control" id="fee" name="fee" value="0.1425">
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- 開始日期和結束日期 -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Backtrader_start_date" class="form-label">開始日期:</label>
+                                        <input type="date" class="form-control" id="Backtrader_start_date" name="Backtrader_start_date" required value="2022-02-01">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Backtrader_end_date" class="form-label">結束日期:</label>
+                                        <input type="date" class="form-control" id="Backtrader_end_date" name="Backtrader_end_date" required value="2024-09-30">
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- 提交按鈕 -->
+                            <button class="btn btn-secondary mt-3" id="submit3" style="background-color: #1E90FF; color: #ffffff; border: none; font-weight: bold;">SUBMIT</button>
+                        </form>
+            
+                        <hr>
+            
+                        <!-- 表格显示 -->
+                        <div id="performance-table"></div>
+                        <!-- 交易紀錄的表格 -->
+                        <table id="transactions-table" class="display" style="width:100%"></table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backtrader -->
+            <div id="gogoro" class="tab-content mt-3 d-none">
+                <div class="card">
+                    <div class="card-header fs-5 fw-bold">gogoro Form</div>
+                    <div class="card-body">
+                        <p>Is up to new stragetegy.</p>
+                        <!-- Add Backtrader-specific content here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backtrader -->
+            <div id="backtrader" class="tab-content mt-3 d-none">
+                <div class="card">
+                    <div class="card-header fs-5 fw-bold">next Form</div>
+                    <div class="card-body">
+                        <p>Is up to new stragetegy.</p>
+                        <!-- Add Backtrader-specific content here -->
+                    </div>
+                </div>
             </div>
         </div>   
     </body>

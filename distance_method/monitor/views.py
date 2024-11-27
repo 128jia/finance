@@ -55,7 +55,8 @@ def add_track(request):
     method = request.POST.get("method")
     window_sizes = request.POST.get("window_sizes")
     std = int(request.POST.get("std"))
-    
+    # print('-----------------------------------')
+    # print(stock1,stock2)
     uth.add(
         username=str(request.user),
         method = method,
@@ -104,15 +105,16 @@ def run_tracker(request):
     user = str(request.user)
     
       
-    env = os.environ['PROJECT_ENV']
-    if env == "prod":
-        tracker_folder_path = "/app/tracker_results"
-    elif env == "dev":
-        tracker_folder_path = Path.cwd().parent / "common" / "tracker_results"
-    else:
-        raise EnvironmentError("Unknown environment! Please set the 'ENV' variable to 'production' or 'development'.")
-    
-    file_path = f"{tracker_folder_path}/{user}/{stock1}_{stock2}_{start_date}_{window_size}_{std}.json"
+    # env = os.environ['PROJECT_ENV']
+    # if env == "prod":
+    #     tracker_folder_path = "/app/tracker_results"
+    # elif env == "dev":
+    #     tracker_folder_path = Path.cwd().parent / "common" / "tracker_results"
+    # else:
+    #     raise EnvironmentError("Unknown environment! Please set the 'ENV' variable to 'production' or 'development'.")
+    tracker_folder_path = Path.cwd().parent /"distance_method"/ "common" / "tracker_results"
+    file_path = f"{tracker_folder_path}\\{user}\\{stock1}_{stock2}_{start_date}_{window_size}_{std}.json"
+    #print("D:\finance\sample\distance_method\common\tracker_results")
     if os.path.exists(file_path):
         with open(file_path, 'r') as file:
             data = json.load(file) 
@@ -128,6 +130,10 @@ def run_tracker(request):
                 },
             method = method
             )
+        directory = os.path.dirname(file_path)
+
+        # 創建目錄，如果不存在
+        os.makedirs(directory, exist_ok=True)
         # 將 JSON 資料保存到文件
         with open(f'{file_path}', 'w') as json_file:
             json.dump(data, json_file, indent=4)       

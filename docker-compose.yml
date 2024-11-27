@@ -1,4 +1,4 @@
-version: '3'
+
 services:
   Auth:
     build: ./accounts
@@ -8,14 +8,16 @@ services:
     ports:
       - 1984:1984
     environment:
-      USER_DB_HOST: 140.116.214.134
+      USER_DB_HOST: mysql
       USER_DB_NAME: distance_method
       USER_DB_USER: thomas
       USER_DB_PASSWORD: AUTh6496
-      USER_DB_PORT: 5432
-      AUTH_PATH: http://140.116.214.156:1984/account/
-      WEB_PATH: http://140.116.214.156:1985/correlation/
+      USER_DB_PORT: 3306
+      AUTH_PATH: http://127.0.0.1:1984/account/
+      WEB_PATH: http://127.0.0.1:1985/correlation/
       PYTHONUNBUFFERED: 1
+    depends_on:
+      - mysql  # 確保 Web 在 mysql 服務之後啟動
 
   FuncAPI:
     build: ./function_api
@@ -29,7 +31,9 @@ services:
       DATA_API_USER: searchfunc
       DATA_API_PASSWORD: scbdfunc*
       PYTHONUNBUFFERED: 1
-
+    depends_on:
+      - mysql  # 確保 Web 在 mysql 服務之後啟動
+      
   Web:
     build: ./distance_method
 
@@ -50,19 +54,37 @@ services:
     # 環境參數
     environment:
       PROJECT_ENV : prod
-      DATA_API_ROOT: https://cosbi5.ee.ncku.edu.tw/usData/
+      DATA_API_ROOT: https://cosbi5.ee.ncku.edu.tw/usData/ 
       DATA_API_USER: searchfunc
       DATA_API_PASSWORD: scbdfunc*
-
-      FUNC_API_ROOT: http://140.116.214.156:1986/usFunc/
-
-      USER_DB_HOST: 140.116.214.134
+      ###還未找到功能
+      FUNC_API_ROOT: http://127.0.0.1:1986/usFunc/
+      ###需更改為自己的db
+      USER_DB_HOST: mysql    
       USER_DB_NAME: distance_method
       USER_DB_USER: thomas
       USER_DB_PASSWORD: AUTh6496
-      USER_DB_PORT: 5432
+      USER_DB_PORT: 3306
 
-      AUTH_PATH: http://140.116.214.156:1984/account/
+      AUTH_PATH: http://127.0.0.1:1984/account/
       PYTHONUNBUFFERED: 1
+    depends_on:
+      - mysql  # 確保 Web 在 mysql 服務之後啟動
+  mysql:
+    image: mysql:8.0  # 使用 MySQL 8.0 映像，您可以根據需要更改版本
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"  # 將 MySQL 端口 3306 映射到主機的 3306 端口
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password  # MySQL root 密碼
+      MYSQL_DATABASE: distance_method     # 自動創建的資料庫名稱
+      MYSQL_USER: thomas                  # 資料庫用戶名
+      MYSQL_PASSWORD: AUTh6496            # 資料庫用戶密碼
+    volumes:
+      - mysql_data:/var/lib/mysql  # 將 MySQL 數據持久化到本地卷中
 
+# 卷定義
+volumes:
+  mysql_data:
 

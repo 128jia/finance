@@ -79,45 +79,54 @@ WSGI_APPLICATION = 'accounts.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
-env = os.environ.get('PROJECT_ENV', 'dev')
-if env == "prod":
-    host = os.environ['USER_DB_HOST']
-    database = os.environ['USER_DB_NAME']
-    user = os.environ['USER_DB_USER']
-    password = os.environ['USER_DB_PASSWORD']
-    port = os.environ['USER_DB_PORT']
+# env = os.environ.get('PROJECT_ENV', 'dev')
+# if env == "prod":
+#     host = os.environ['USER_DB_HOST']
+#     database = os.environ['USER_DB_NAME']
+#     user = os.environ['USER_DB_USER']
+#     password = os.environ['USER_DB_PASSWORD']
+#     port = os.environ['USER_DB_PORT']
     
-elif env == "dev":
-    file_path = Path.cwd() / "config" / "correlation_db.json"
-    with open (file_path, 'r')as f:
-        db_info = json.load(f)
-    host = db_info['USER_DB_HOST']
-    database = db_info['USER_DB_NAME']
-    user = db_info['USER_DB_USER']
-    password = db_info['USER_DB_PASSWORD']
-    port = db_info['USER_DB_PORT']
+# elif env == "dev":
+#     file_path = Path.cwd() / "config" / "correlation_db.json"
+#     with open (file_path, 'r')as f:
+#         db_info = json.load(f)
+#     host = db_info['USER_DB_HOST']
+#     database = db_info['USER_DB_NAME']
+#     user = db_info['USER_DB_USER']
+#     password = db_info['USER_DB_PASSWORD']
+#     port = db_info['USER_DB_PORT']
     
-else:
-    raise EnvironmentError("Unknown environment! Please set the 'ENV' variable to 'production' or 'development'.")
+# else:
+#     raise EnvironmentError("Unknown environment! Please set the 'ENV' variable to 'production' or 'development'.")
 
 
+# DATABASES = {
+#      'default': {
+
+#         'ENGINE': 'django.db.backends.postgresql',
+
+#         'NAME': database,
+
+#         'USER': user,
+
+#         'PASSWORD': password,
+
+#         'HOST': host,
+
+#         'PORT': port,
+#     }
+# }
 DATABASES = {
-     'default': {
-
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-        'NAME': database,
-
-        'USER': user,
-
-        'PASSWORD': password,
-
-        'HOST': host,
-
-        'PORT': port
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'distance_method',
+        'USER': 'thomas',
+        'PASSWORD': 'AUTh6496',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

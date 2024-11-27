@@ -32,7 +32,7 @@ def log_out(request):
     if env == "prod":
         return redirect(os.environ['AUTH_PATH'] + "login")
     elif env == "dev":
-        return redirect('http://140.116.214.156:1984/account/login')
+        return redirect('http://127.0.0.1:1984/account/login')
     else:
         raise EnvironmentError("Unknown environment! Please set the 'ENV' variable to 'production' or 'development'.")
 
@@ -43,7 +43,8 @@ def sign_in(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
-        
+        print('user:',username)
+        print(password)
         user = authenticate(request, username=username, password=password)
         if user is not None:
             # django login
@@ -51,9 +52,10 @@ def sign_in(request):
             messages.success(request, 'You are now logged in.')
             
             if env == "prod":
+                
                 return redirect(os.environ['WEB_PATH'])
             elif env == "dev":
-                return redirect('http://140.116.214.156:1985/correlation')
+                return redirect('http://127.0.0.1:1985/correlation')
             else:
                 raise EnvironmentError("Unknown environment! Please set the 'ENV' variable to 'production' or 'development'.")
             

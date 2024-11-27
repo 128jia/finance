@@ -25,3 +25,6 @@ def calculate_price_ratio(ohlcv1, ohlcv2):
     timestamp_series = list(map(convert_timestamp_to_highchart, [date.strftime('%Y-%m-%d') for date in ohlcv1.index]))
     price_ratio = list(zip(timestamp_series, [x / y for x, y in zip(list(ohlcv1['Close']), list(ohlcv2['Close']))]))
     return price_ratio
+
+#此檔案專為格式化數據以用於 Highcharts，一個常見的圖表繪製庫。
+# 它可能包含將數據轉換為與 Highcharts 相容的 JSON 結構的方法，用於在網頁應用中生成折線圖或柱狀圖等視覺化效果。

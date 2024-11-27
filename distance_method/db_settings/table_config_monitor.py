@@ -2,17 +2,23 @@ import psycopg2
 import json 
 import os
 
-with open ("/home/thomas/Desktop/distance_method/distance_method/config/correlation_db.json", 'r')as f:
-    db_info = json.load(f)
+# with open (r"D:\finance\sample\distance_method\distance_method\config\correlation_db.json", 'r')as f:
+#     db_info = json.load(f)
     
 
 # Connect to PostgreSQL server
 db_conn = psycopg2.connect(
-                            host = db_info['USER_DB_HOST'],
-                            database = db_info['USER_DB_NAME'],
-                            user = db_info['USER_DB_USER'],
-                            password = db_info['USER_DB_PASSWORD'],
-                            port = db_info['USER_DB_PORT'])
+                            # host = db_info['USER_DB_HOST'],
+                            # database = db_info['USER_DB_NAME'],
+                            # user = db_info['USER_DB_USER'],
+                            # password = db_info['USER_DB_PASSWORD'],
+                            # port = db_info['USER_DB_PORT']
+                            host =  "localhost",
+                            database =  "distance_method",
+                            user =  "thomas",
+                            password =  "AUTh6496",
+                            port= 5432
+                            )
 print("Connect successful!")
 db_cursor = db_conn.cursor()
 db_cursor.execute("""DROP TABLE IF EXISTS user_tracker;""")

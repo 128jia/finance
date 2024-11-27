@@ -230,3 +230,5 @@ def handle_api_profit_loss_data(object):
     pl_exit_point = [[int(datetime.strptime(date, '%Y-%m-%d').timestamp() * 1000), val] for date, val in object["exit_point"]]
     
     return pl_daily_profits, pl_total_values, pl_entry_point, pl_exit_point
+
+#此檔案處理交易分析後的數據後處理，準備結果以供視覺化或報告。它可能涉及數據彙總或轉換為其他元件所需的格式，如圖表或數據表

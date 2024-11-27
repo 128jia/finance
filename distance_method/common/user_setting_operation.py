@@ -2,37 +2,49 @@ import json
 import psycopg2
 import os
 from pathlib import Path
-
-
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 class ConnectUserDB(object):
     
     def __init__(self):
         
-        env = os.environ.get('PROJECT_ENV', 'dev')
-        # Connect to PostgreSQL server (Docker)
-        if env == "prod":
-            self.db_conn = psycopg2.connect(
-                                        host=os.environ['USER_DB_HOST'],
-                                        database=os.environ['USER_DB_NAME'],
-                                        user=os.environ['USER_DB_USER'],
-                                        password=os.environ['USER_DB_PASSWORD'],
-                                        port=os.environ['USER_DB_PORT'])
-            print("Connect successful!")
+        # env = os.environ.get('PROJECT_ENV', 'dev')
+        # #### Connect to PostgreSQL server (Docker)
+        # if env == "prod":
+        #     self.db_conn = psycopg2.connect(
+        #                                 host=os.environ['USER_DB_HOST'],
+        #                                 database=os.environ['USER_DB_NAME'],
+        #                                 user=os.environ['USER_DB_USER'],
+        #                                 password=os.environ['USER_DB_PASSWORD'],
+        #                                 port=os.environ['USER_DB_PORT'])
+        #     print("Connect successful!")
 
-        # Connect to PostgreSQL server (Local)
-        elif env == "dev":
-            file_path = Path.cwd() / "config" / "correlation_db.json"
-            with open (file_path, 'r')as f:
-                self.db_info = json.load(f)
-            self.db_conn = psycopg2.connect(
-                                        host = self.db_info['USER_DB_HOST'],
-                                        database = self.db_info['USER_DB_NAME'],
-                                        user = self.db_info['USER_DB_USER'],
-                                        password = self.db_info['USER_DB_PASSWORD'],
-                                        port = self.db_info['USER_DB_PORT'])
-        else:
-            raise EnvironmentError("Unknown environment! Please set the 'ENV' variable to 'production' or 'development'.")
-    
+        #### Connect to PostgreSQL server (Local)
+        # elif env == "dev":
+        #     self.db_conn = psycopg2.connect(
+        #                                 database =  "distance_method",
+        #                                 user =  "thomas",
+        #                                 password =  "AUTh6496",
+        #                                 port= 5432)
+            #file_path = Path.cwd() / "config" / "correlation_db.json"
+            # with open (file_path, 'r')as f:
+            #     self.db_info = json.load(f)
+            # self.db_conn = psycopg2.connect(
+                                        # host = self.db_info['USER_DB_HOST'],
+                                        # database = self.db_info['USER_DB_NAME'],
+                                        # user = self.db_info['USER_DB_USER'],
+                                        # password = self.db_info['USER_DB_PASSWORD'],
+                                        # port = self.db_info['USER_DB_PORT']
+                                        # host =  "localhost")
+        # else:
+        #     raise EnvironmentError("Unknown environment! Please set the 'ENV' variable to 'production' or 'development'.")
+        self.db_conn = psycopg2.connect(
+                                        database =  "distance_method",
+                                        user =  "thomas",
+                                        password =  "AUTh6496",
+                                        port= 5432
+                                        )
         
         self.db_cursor = self.db_conn.cursor()
 
@@ -52,35 +64,40 @@ class UserTrackingHandler(ConnectUserDB):
         
     # add track
     def add(self, **kwargs):
-        user_id = self._get_user_id(kwargs['username'])
-        
-        # 確定要插入的欄位和相應的值
-        fields = ['user_id']
-        values = [user_id]
-        placeholders = ['%s']
-        
-        # 動態添加其餘的欄位和值
-        optional_fields = [
-            'method', 'stock1', 'stock2', 'start_date', 'end_date', 'window_size', 'n_times'
-        ]
-        
-        for field in optional_fields:
-            if field in kwargs and kwargs[field] is not None:
-                fields.append(field)
-                values.append(kwargs[field])
-                placeholders.append('%s')
-        
-        # 動態生成 INSERT 語句
-        sql = f"""
-            INSERT INTO user_tracker ({', '.join(fields)}) 
-            VALUES({', '.join(placeholders)}) 
-            ON CONFLICT DO NOTHING;
-        """
-        
-        # 執行 SQL 語句
-        self.db_cursor.execute(sql, values)
-        self.db_conn.commit()
-
+        try:    
+            user_id = self._get_user_id(kwargs['username'])
+            
+            # 確定要插入的欄位和相應的值
+            fields = ['user_id']
+            values = [user_id]
+            placeholders = ['%s']
+            
+            # 動態添加其餘的欄位和值
+            optional_fields = [
+                'method', 'stock1', 'stock2', 'start_date', 'end_date', 'window_size', 'n_times'
+            ]
+            
+            for field in optional_fields:
+                if field in kwargs and kwargs[field] is not None:
+                    fields.append(field)
+                    values.append(kwargs[field])
+                    placeholders.append('%s')
+            
+            # 動態生成 INSERT 語句
+            sql = f"""
+                INSERT INTO user_tracker ({', '.join(fields)}) 
+                VALUES({', '.join(placeholders)}) 
+                ON CONFLICT DO NOTHING;
+            """
+            
+            # 執行 SQL 語句
+            self.db_cursor.execute(sql, values)
+            self.db_conn.commit()
+        except psycopg2.errors as e:
+            logger.error(f"SQL Error: {e}")
+            self.db_conn.rollback()
+            raise
+            
     # remove track
     def remove(self, **kwargs):
         user_id = self._get_user_id(kwargs['username'])
@@ -157,7 +174,8 @@ class UserTrackingHandler(ConnectUserDB):
         self.db_cursor.execute(sql)
         res = self.db_cursor.fetchall()
         return res
-
+#此檔案負責處理與使用者相關的數據，特別是管理資料庫連線以儲存或檢索使用者設定。
+# 它包括追蹤使用者活動和設定的功能（例如，被追蹤的股票、策略配置），並使用 PostgreSQL 作為資料庫後端。
 
 if __name__ == "__main__":
     uth = UserTrackingHandler()
