@@ -1,0 +1,12 @@
+argon2-cffi==21.3.0
+argon2-cffi-bindings==21.2.0
+asgiref==3.7.2
+certifi==2023.5.7
+cffi==1.17.1
+charset-normalizer==3.1.0
+Django==4.2.2
+idna==3.4
+psycopg2==2.9.10
+pycparser==2.21
+sqlparse==0.5.1
+tzdata==2024.2
