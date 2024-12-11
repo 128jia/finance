@@ -32,13 +32,14 @@ $(document).ready(function () {
 
     // 預設載入 Distance Method
     // loadDistanceMethod();
+    
 });
 function loadOtherMethod() {
     $("#submit2").on("click", function (e) {
         e.preventDefault(); // 防止表單提交的默認行為
         
         $.ajax({
-            url: '/correction/rsi_cross_ajax/', // API 的 URL
+            url: 'rsi_cross_ajax/', // API 的 URL
             data: {
                 'stock': document.getElementById('stock1').value,
                 'short_rsi': document.getElementById('short_rsi').value,
@@ -69,7 +70,7 @@ function loadBacktrader(){
         e.preventDefault();  // 防止表單的默認提交
 
         $.ajax({
-            url: '/correction/run_strategy/',  // URL對應你的views.py中的路徑
+            url: 'run_strategy/',  // URL對應你的views.py中的路徑
             type: 'POST',
             data: {
                 stock1: $('#stock1').val(),  // 股票代號

@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tool',
-    'monitor'
+    'monitor',
+    #'django_jsx',
+    'fintool',
 ]
 
 MIDDLEWARE = [

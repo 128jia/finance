@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 from collections import defaultdict
 from itertools import permutations
 from datetime import datetime
-import json,traceback
+import json,traceback,logging
 import numpy as nps
 import pandas as pd
 import yfinance as yf
@@ -17,6 +18,9 @@ from tool.hw2.rsi_cross_strategy import rsi_cross_strategy
 from tool.hw2.BackTest import Performance
 from tool.hw2_2.strategy import MyStrategy
 import backtrader as bt
+from .hw10.utils import PerRiver 
+from django.views.decorators.csrf import ensure_csrf_cookie
+
 def web(request):
     if not request.user.is_authenticated:
         messages.success(request, 'Sorry ! Please Log In.')
@@ -126,6 +130,7 @@ def ScreenerDistance(request):
     #                                                 data1 = data1_response, 
     #data2 = data2_response)
 #hw2-1
+@ensure_csrf_cookie
 def rsi_cross_ajax(request):
     print("step1:action")
     if request.method == 'POST':
@@ -360,3 +365,39 @@ def run_strategy(request):
         print(f"Error in run_strategy: {str(e)}")
         traceback.print_exc()  # 打印完整的錯誤跟蹤
         return JsonResponse({'error': str(e)}, status=500)
+
+def web_tracker(request):
+    # render search page
+    if not request.user.is_authenticated:
+        messages.success(request, 'Sorry ! Please Log In.')
+        return redirect('/account/login')
+    return (render(request, 'tracker.html'))
+
+#hw10
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+def get_per_river_data(request):
+    if request.method == 'POST':
+        try:
+            # 獲取 POST 請求中的參數
+            body = json.loads(request.body)
+            stock_code = body.get("stockCode")
+            time_unit = body.get("timeUnit").upper()  # 轉換為大寫（符合 PerRiver 類別要求）
+            if time_unit == "QUARTER":
+                time_unit = "QUAR"  # 將 quarter 替換為 quar
+            print("時間單位",time_unit)
+            # 確保參數完整
+            if not stock_code or not time_unit:
+                return JsonResponse({"error": "Missing parameters"}, status=400)
+
+            # 調用 PerRiver 類別處理數據
+            per_river = PerRiver()
+            result = per_river.run(stock_code, time_unit)
+            print("here 是結果喔",result)
+            return JsonResponse(result)
+
+        except Exception as e:
+            logger.error("發生錯誤: %s", str(e))
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Invalid request method"}, status=405)

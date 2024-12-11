@@ -3,6 +3,7 @@ $.ajaxSetup({
     csrfmiddlewaretoken: "{{ csrf_token }}",
   },
 });
+/////   
   function render_signals_graph(
     container,
     ticker1,
@@ -402,262 +403,279 @@ $.ajaxSetup({
         
             Highcharts.stockChart(container, obj);
   };
-
+//////////////////////////////////////
   $(document).ready(function () {
+      
 
-    $('#distance_add_track').click(function(){
-
-      // 拿取使用者選取的parames
-      var stock1 = $(`#stock1-distance`).val();
-      var stock2 = $("#stock2-distance").val();
-      var start_date = $("#start_date-distance").val();
-      var end_date = $("#end_date-distance").val();
-      var window_sizes = $(`#window_size-distance`).val();
-      var std = $("#std-distance").val();
-  
-      var track_params = new FormData();
-      track_params.append("stock1", stock1);
-      track_params.append("stock2", stock2);
-      track_params.append("method", "distance");
-      track_params.append("start_date", start_date);
-      track_params.append("end_date", end_date);
-      track_params.append("window_sizes", window_sizes);
-      track_params.append("std", std);
-  
-      $.ajax({
-          url: "/monitor/add_track/",
-          type: "post",
-          data : track_params,
-          dataType : 'json',
-          processData : false,
-          contentType : false,
-          success: function (res) {
-              alert("Add track successful!!!!!!!!!!!")
-          }
-      });
-    });
-
-    $("#distance_submit").click(function () {
-  
-      // 拿取使用者選取的parames
-      var stock1 = $(`#stock1-distance`).val();
-      var stock2 = $("#stock2-distance").val();
-      var start_date = $("#start_date-distance").val();
-      var end_date = $("#end_date-distance").val();
-      var window_sizes = $(`#window_size-distance`).val();
-      var std = $("#std-distance").val();
-  
-      var data_config = new FormData();
-      data_config.append("stock1", stock1);
-      data_config.append("stock2", stock2);
-      data_config.append("start_date", start_date);
-      data_config.append("end_date", end_date);
-      data_config.append("window_sizes", window_sizes);
-      data_config.append("std", std);
-  
-      var date1 = new Date(start_date);
-      var date2 = new Date(end_date);
-      var today = new Date();
-  
-      var timeDifference = date2 - date1;
-      var yearsDifference = timeDifference / (365 * 24 * 60 * 60 * 1000);
-      if (date1 > date2) {
-        alert("Error!!! Start date cannot be greater than end date");
-        return;
-      }
-      if (yearsDifference < 1) {
-        alert(
-          "Error!!! The difference between start and end dates must be greater than 1 year"
-        );
-        return;
-      }
-      if (date2 > today || date1 > today) {
-        alert("Error!!! The date entered cannot be greater than today");
-        return;
-      }
-  
-      $(`#distance_submit`).hide();
-      $(`#distance_circle`).show();
-      $(`#distance_add_track`).hide();
-      $(".distance_result").css("display", "none");
-  
-      $.ajax({
-        headers: { "X-CSRFToken": csrf_token },
-        type: "POST",
-        dataType: "json",
-        url: "run_distance/",
-        data: data_config,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          console.log(response);
-  
-          $(`#distance_submit`).show();
-          $(`#distance_circle`).hide();
-          $(`#distance_add_track`).show();
-          $(".distance_result").css("display", "block");
-   
-          render_signals_graph(
-            "signals_plot",
-            response.stock1,
-            response.stock2,
-            response.data1_his["close"],
-            response.data2_his["close"],
-            response.plot_signals
-          );
-
-          render_bands_graph(
-            "bollinger_bands_plot",
-            response.spread,
-            response.middle_line,
-            response.upper_line,
-            response.lower_line,
-            response.bands_signals_sell,
-            response.bands_signals_buy
-          );
-
-          render_profit_loss_graph(
-            "profit_loss_plot",
-            response.pl_daily_profits,
-            response.pl_total_values,
-            response.pl_entry_point,
-            response.pl_exit_point,
-          );
-
-          $("#signals_table").DataTable({
-            autoWidth: false,
-            bDestroy: true,
-            searching: false,
-            lengthMenu: [
-              [5, 10, 20, -1],
-              [5, 10, 20, "All"],
-            ],
-            data: response.table_signals,
-            columns: [
-              { data: "date", title: "Date" },
-              { data: "type", title: "Type" },
-              { data: "stock1_action", title: `Action of ${response.stock1}` },
-              { data: "stock1_price", title: `Price of ${response.stock1}` },
-              { data: "stock2_action", title: `Action of ${response.stock2}` },
-              { data: "stock2_price", title: `Price of ${response.stock2}` },
-            ],
-            columnDefs: [
-              {
-                targets: [2, 3],
-                createdCell: function (td, cellData, rowData, row, col) {
-                  $(td).css("background-color", "white");
-                },
-              },
-              {
-                targets: [4, 5],
-                createdCell: function (td, cellData, rowData, row, col) {
-                  $(td).css("background-color", "whitesmoke");
-                },
-              },
-            ],
-            fnRowCallback: function (nRow, aData) {
-              if (aData["type"] == "Open") {
-                $(nRow).find("td:eq(0)").css("background-color", "paleturquoise");
-                $(nRow).find("td:eq(1)").css("background-color", "paleturquoise");
-              } else {
-                $(nRow).find("td:eq(0)").css("background-color", "ime");
-                $(nRow).find("td:eq(1)").css("background-color", "ime");
-              }
-            },
-          });
-
-          $("#exe_signals_table").DataTable({
-            autoWidth: false,
-            bDestroy: true,
-            searching: false,
-            lengthMenu: [
-              [5, 10, 20, -1],
-              [5, 10, 20, "All"],
-            ],
-            data: response.exe_table_signals,
-            columns: [
-              { data: "date", title: "Date" },
-              { data: "type", title: "Type" },
-              { data: "stock1_action", title: `Action of ${response.stock1}` },
-              { data: "stock1_price", title: `Price of ${response.stock1}` },
-              { data: "stock2_action", title: `Action of ${response.stock2}` },
-              { data: "stock2_price", title: `Price of ${response.stock2}` },
-              { data: "percentage", title: `Percentage of Profit|Loss (%)` },
-            ],
-            columnDefs: [
-              {
-                targets: [2, 3],
-                createdCell: function (td, cellData, rowData, row, col) {
-                  $(td).css("background-color", "white");
-                },
-              },
-              {
-                targets: [4, 5],
-                createdCell: function (td, cellData, rowData, row, col) {
-                  $(td).css("background-color", "whitesmoke");
-                },
-              },
-            ],
-            fnRowCallback: function (nRow, aData) {
-              if (aData["type"] == "Open") {
-                $(nRow).find("td:eq(0)").css("background-color", "paleturquoise");
-                $(nRow).find("td:eq(1)").css("background-color", "paleturquoise");
-              } else {
-                $(nRow).find("td:eq(0)").css("background-color", "ime");
-                $(nRow).find("td:eq(1)").css("background-color", "ime");
-              }
-            },
-          });
-
-        
-        },
-      });
-    });
-  });
-  $(document).ready(function () {
-    // 設置點擊事件
     $("#function-tabs .nav-link").click(function () {
-        // 獲取當前點擊的按鈕的 target (對應的功能區塊)
-        const target = $(this).data("target");
+      // 獲取當前點擊的按鈕的 target (對應的功能區塊)
+      const target = $(this).data("target");
+      console.log(target);
 
-        // 1. 移除所有按鈕的 active 樣式
-        $("#function-tabs .nav-link").removeClass("active");
+      // 1. 移除所有按鈕的 active 樣式
+      $("#function-tabs .nav-link").removeClass("active");
 
-        // 2. 隱藏所有的功能區塊
-        $(".tab-content").addClass("d-none");
+      // 2. 隱藏所有的功能區塊
+      $(".tab-content").addClass("d-none");
 
-        // 3. 為當前點擊的按鈕加上 active 樣式
-        $(this).addClass("active");
+      // 3. 為當前點擊的按鈕加上 active 樣式
+      $(this).addClass("active");
 
-        // 4. 顯示對應的功能區塊
-        $(target).removeClass("d-none");
+      // 4. 顯示對應的功能區塊
+      $(target).removeClass("d-none");
 
-        if (target === "#distance-method") {
-            loadDistanceMethod();
-        } else if (target === "#other-method") {
-            loadOtherMethod();
-        } else if (target === "#backtrader") {
-            loadBacktrader();
-        }
-    });
+      if (target === "#distance-method") {
+          loadDistanceMethod();
+      } else if (target === "#other-method") {
+          loadOtherMethod();
+      } else if (target === "#backtrader") {
+          loadBacktrader();
+      }
+  });
+        loadDistanceMethod();
+  });
+  //<!--Distance Method-->
+  function loadDistanceMethod() {
+      $('#distance_add_track').click(function(){
 
-    // 預設載入 Distance Method
-    // loadDistanceMethod();
-}); 
-//<!--Distance Method-->
-function loadDistanceMethod() {
+          // 拿取使用者選取的parames
+          var stock1 = $(`#stock1-distance`).val();
+          var stock2 = $("#stock2-distance").val();
+          var start_date = $("#start_date-distance").val();
+          var end_date = $("#end_date-distance").val();
+          var window_sizes = $(`#window_size-distance`).val();
+          var std = $("#std-distance").val();
+      
+          var track_params = new FormData();
+          track_params.append("stock1", stock1);
+          track_params.append("stock2", stock2);
+          track_params.append("method", "distance");
+          track_params.append("start_date", start_date);
+          track_params.append("end_date", end_date);
+          track_params.append("window_sizes", window_sizes);
+          track_params.append("std", std);
+      
+          $.ajax({
+              url: "/monitor/add_track/",
+              type: "post",
+              data : track_params,
+              dataType : 'json',
+              processData : false,
+              contentType : false,
+              success: function (res) {
+                  alert("Add track successful!!!!!!!!!!!")
+              }
+          });
+        });
+    
+        $("#distance_submit").click(function () {
+          
+  
+      
+          // $("#signals_table").DataTable({
+          //     autoWidth: false,
+          //     searching: false,
+          //     paging: true,
+          //     lengthMenu: [[5, 10, 20], [5, 10, 20]],
+          //     columns: [
+          //         { title: "Date" },
+          //         { title: "Type" },
+          //         { title: "Stock 1 Action" },
+          //         { title: "Stock 1 Price" },
+          //         { title: "Stock 2 Action" },
+          //         { title: "Stock 2 Price" },
+          //     ],
+          // });
+          // 拿取使用者選取的parames
+          var stock1 = $(`#stock1-distance`).val();
+          var stock2 = $("#stock2-distance").val();
+          var start_date = $("#start_date-distance").val();
+          var end_date = $("#end_date-distance").val();
+          var window_sizes = $(`#window_size-distance`).val();
+          var std = $("#std-distance").val();
+      
+          var data_config = new FormData();
+          data_config.append("stock1", stock1);
+          data_config.append("stock2", stock2);
+          data_config.append("start_date", start_date);
+          data_config.append("end_date", end_date);
+          data_config.append("window_sizes", window_sizes);
+          data_config.append("std", std);
+      
+          var date1 = new Date(start_date);
+          var date2 = new Date(end_date);
+          var today = new Date();
+      
+          var timeDifference = date2 - date1;
+          var yearsDifference = timeDifference / (365 * 24 * 60 * 60 * 1000);
+          if (date1 > date2) {
+            alert("Error!!! Start date cannot be greater than end date");
+            return;
+          }
+          if (yearsDifference < 1) {
+            alert(
+              "Error!!! The difference between start and end dates must be greater than 1 year"
+            );
+            return;
+          }
+          if (date2 > today || date1 > today) {
+            alert("Error!!! The date entered cannot be greater than today");
+            return;
+          }
+      
+          $(`#distance_submit`).hide();
+          $(`#distance_circle`).show();
+          $(`#distance_add_track`).hide();
+          $(".distance_result").css("display", "none");
+      
+          $.ajax({
+            headers: { "X-CSRFToken": csrf_token },
+            type: "POST",
+            dataType: "json",
+            url: "run_distance/",
+            data: data_config,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+              console.log(response);
+      
+              $(`#distance_submit`).show();
+              $(`#distance_circle`).hide();
+              $(`#distance_add_track`).show();
+              $(".distance_result").css("display", "block");
+       
+              render_signals_graph(
+                "signals_plot",
+                response.stock1,
+                response.stock2,
+                response.data1_his["close"],
+                response.data2_his["close"],
+                response.plot_signals
+              );
+    
+              render_bands_graph(
+                "bollinger_bands_plot",
+                response.spread,
+                response.middle_line,
+                response.upper_line,
+                response.lower_line,
+                response.bands_signals_sell,
+                response.bands_signals_buy
+              );
+    
+              render_profit_loss_graph(
+                "profit_loss_plot",
+                response.pl_daily_profits,
+                response.pl_total_values,
+                response.pl_entry_point,
+                response.pl_exit_point,
+              );
+    
+              $("#signals_table").DataTable({
+                autoWidth: false,
+                bDestroy: true,
+                searching: false,
+                lengthMenu: [
+                  [5, 10, 20, -1],
+                  [5, 10, 20, "All"],
+                ],
+                data: response.table_signals,
+                columns: [
+                  { data: "date", title: "Date" },
+                  { data: "type", title: "Type" },
+                  { data: "stock1_action", title: `Action of ${response.stock1}` },
+                  { data: "stock1_price", title: `Price of ${response.stock1}` },
+                  { data: "stock2_action", title: `Action of ${response.stock2}` },
+                  { data: "stock2_price", title: `Price of ${response.stock2}` },
+                ],
+                columnDefs: [
+                  {
+                    targets: [2, 3],
+                    createdCell: function (td, cellData, rowData, row, col) {
+                      $(td).css("background-color", "white");
+                    },
+                  },
+                  {
+                    targets: [4, 5],
+                    createdCell: function (td, cellData, rowData, row, col) {
+                      $(td).css("background-color", "whitesmoke");
+                    },
+                  },
+                ],
+                fnRowCallback: function (nRow, aData) {
+                  if (aData["type"] == "Open") {
+                    $(nRow).find("td:eq(0)").css("background-color", "paleturquoise");
+                    $(nRow).find("td:eq(1)").css("background-color", "paleturquoise");
+                  } else {
+                    $(nRow).find("td:eq(0)").css("background-color", "MistyRose");
+                    $(nRow).find("td:eq(1)").css("background-color", "MistyRose");
+                  }
+                },
+              });
+    
+              $("#exe_signals_table").DataTable({
+                autoWidth: false,
+                bDestroy: true,
+                searching: false,
+                lengthMenu: [
+                  [5, 10, 20, -1],
+                  [5, 10, 20, "All"],
+                ],
+                data: response.exe_table_signals,
+                columns: [
+                  { data: "date", title: "Date" },
+                  { data: "type", title: "Type" },
+                  { data: "stock1_action", title: `Action of ${response.stock1}` },
+                  { data: "stock1_price", title: `Price of ${response.stock1}` },
+                  { data: "stock2_action", title: `Action of ${response.stock2}` },
+                  { data: "stock2_price", title: `Price of ${response.stock2}` },
+                  { data: "percentage", title: `Percentage of Profit|Loss (%)` },
+                ],
+                columnDefs: [
+                  {
+                    targets: [2, 3],
+                    createdCell: function (td, cellData, rowData, row, col) {
+                      $(td).css("background-color", "white");
+                    },
+                  },
+                  {
+                    targets: [4, 5],
+                    createdCell: function (td, cellData, rowData, row, col) {
+                      $(td).css("background-color", "whitesmoke");
+                    },
+                  },
+                ],
+                fnRowCallback: function (nRow, aData) {
+                  if (aData["type"] == "Open") {
+                    $(nRow).find("td:eq(0)").css("background-color", "paleturquoise");
+                    $(nRow).find("td:eq(1)").css("background-color", "paleturquoise");
+                  } else {
+                    $(nRow).find("td:eq(0)").css("background-color", "MistyRose");
+                    $(nRow).find("td:eq(1)").css("background-color", "MistyRose");
+                  }
+                },
+              });
+    
+            
+            },
+          });
+        });
 
-}
+  }
+
+
 // <!-- other function  -->
 function loadOtherMethod() {
   console.log("submit2 action");
+  
   $(document).off("click", "#submit2").on("click", "#submit2", function (e) {
-      e.preventDefault(); // 防止表單提交的默認行為
+      //e.preventDefault(); // 防止表單提交的默認行為
       console.log("submit data!");
       
       // 在需要時設置 CSRF token
       const csrftoken = getCookie('csrftoken');
       console.log("CSRF Token:", csrftoken);
+
       $.ajax({
           url: 'rsi_cross_ajax/', // API 的 URL
           data: {
@@ -674,7 +692,7 @@ function loadOtherMethod() {
   
           success: function (response) {
               // 渲染 Datatable
-              console.log("rsi ajaxx success")
+              console.log("rsi ajaxx success",response)
               renderDatatable(response.trade_results);
               // 渲染報酬率和最大回撤圖表
               renderProfitDrawdownChart(response.profit_mdd_data);
@@ -822,7 +840,7 @@ function loadBacktrader(){
 }
 
 function renderDatatable(tradeResults) {
-  $('#datatable').DataTable({
+  $('#rsitable').DataTable({
       destroy: true,
       data: tradeResults,
       columns: [

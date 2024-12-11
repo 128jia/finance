@@ -9,4 +9,6 @@ urlpatterns = [
     path('rsi_cross_ajax/', views.rsi_cross_ajax),
     path('run_strategy/', views.run_strategy),
     
+
+    
 ]

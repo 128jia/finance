@@ -52,3 +52,7 @@ env/
 *.xlsx
 *.png
 *.json
+# 例外處理特定檔案
+!accounts/requirement1.txt
+!distance_method/requirement2.txt
+!function_api/requirement1.txt

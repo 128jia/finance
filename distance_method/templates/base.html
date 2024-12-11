@@ -4,14 +4,11 @@
 {% load static %}
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -45,16 +42,18 @@
         <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
         <script src="https://code.highcharts.com/stock/modules/accessibility.js"></script>
         <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
-
+  
         {% csrf_token %}
         <script>
             csrf_token= "{{ csrf_token }}"
         </script>
 
+
     </head>
 
     <body>
         <div align=center class="container-fluid" style="margin-top:2%">
+            {% comment %} nav bar {% endcomment %}
             <div class="nav nav-tabs" id="function-tabs">
                 <div class="nav-item">
                     <button class="nav-link active" id="distance-method-tab" data-target="#distance-method" style="background-color: #1E90FF; color: white;">Distance_Method</button>
@@ -65,17 +64,23 @@
                 <div class="nav-item">
                     <button class="nav-link" id="backtrader-tab" data-target="#backtrader" style="background-color: #1E90FF; color: white;">Backtrader</button>
                 </div>
+                {% comment %} <div class="nav-item">
+                    <button class="nav-link" id="finlab-tab" data-target="#finlab" style="background-color: #1E90FF; color: white;">Finlab</button>
+                </div>
+                <div class="nav-item">
+                    <button class="nav-link" id="river-tab" data-target="#river" style="background-color: #1E90FF; color: white;">river</button>
+                </div> {% endcomment %}
             </div>  
-            {% comment %} Distance Method   {% endcomment %}
-            <div class="tab-content col-18 mx-auto" id ="distance-method">
-                <div class="card" style="width: 80%; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            {% comment %} 1.Distance Method   {% endcomment %}
+            <div class=" tab-content col-18 mx-auto" id ="distance-method">
+                <div class="card tab-content" style="width: 80%; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" id ="distance-method">
                     <div class="card-header bg-primary text-white" style="border-radius: 8px 8px 0 0;">
                         <h4 style="text-align: left; margin: 0;">
                             <b><i class="fas fa-user-cog"></i> Fill the Form</b>
                         </h4>
                     </div>
-                    {% comment %} Distance Form {% endcomment %}
-                    <div class="card-body">
+                    {% comment %} Distance Form Content{% endcomment %}
+                    <div class="card-body " >
                         <div class="container-fluid">
                             <div class="row" style="width: 100%; margin-top: 20px;">
                                 <div class="col-md-6" style="margin-bottom: 20px;">
@@ -136,10 +141,7 @@
                                 </div>
                             </div>
                             <table id="signals_table" class="display table table-striped">
-                                <thead>
-                                </thead>
-                                <tbody>                   
-                                </tbody>
+
                             </table>
                             <br>
                             <hr>
@@ -161,7 +163,7 @@
                 </div>
                 <br>
             </div>
-            <!-- other-method -->
+            {% comment %} 2.other-method {% endcomment %}
             <div id="other-method" class="tab-content mt-3 d-none">
                 <div class="card" style="width: 80%; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"> <!-- 控制卡片的最大宽度 -->
                     <div class="card-header fs-5 fw-bold">
@@ -231,7 +233,7 @@
                         <hr>
             
                         <!-- 表格显示 -->
-                        <table id="datatable" class="display" style="width:100%">
+                        <table id="rsitable" class="display" style="width:100%">
                             <thead id="table-head">
                                 <tr>
                                     <!-- 表格標題 -->
@@ -247,7 +249,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Backtrader -->
+            {% comment %} 3. Backtrader {% endcomment %}
             <div id="backtrader" class="tab-content mt-3 d-none">
                 <div class="card" style="width: 80%; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                     <div class="card-header fs-5 fw-bold">
@@ -376,7 +378,207 @@
                     </div>
                 </div>
             </div>
-        </div>   
+
+            {% comment %} 4.FinLab {% endcomment %}
+            {% comment %} <div id ="finlab"class="tab-content mt-3 d-none">
+                <div class='card-body'>
+                    <div class="card body"
+                        style=" display: flex;flex-direction: row;justify-content: space-between;align-items: flex-start;">
+                        <div id="type_select" class="list-group" style="list-style-type: none;width: 20%;margin: 0;padding: 0;margin-left: 10%;">
+                            <a class="list-group-item list-group-item-action disabled" aria-current="true">
+                                選擇類型
+                            </a>
+                            <a onclick="showType('type1')" id="select_type1"
+                                class="list-group-item list-group-item-action">價量</a>
+                            <a onclick="showType('type2')" id="select_type2"
+                                class="list-group-item list-group-item-action">選成長</a>
+                        </div>
+                        <div style="width: 80%; margin-right: 10px;">
+                            <div class="card" style="width:80%;">
+                                <div class="card-header">選股條件清單</div>
+                                <div class="card-body" id="all_type_Divs">
+                                    <div id='type1' style='display: none;'>
+                                        <ul class="nav nav-tabs" id="option_select1">
+                                            <!-- <li class="nav-item">
+                                                <a id="select_form1" class="nav-link active" aria-current="page"
+                                                    onclick="showquoteForm('form1')">close</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a id="select_form2" class="nav-link"
+                                                    onclick="showquoteForm('form2')">volumn</a>
+                                            </li> -->
+                                        </ul>
+                                        <form id="choose_table1"></form>
+                                    </div>
+        
+                                    <div id='type2' style='display: none;'>
+                                        <ul class="nav nav-tabs" id="option_select2">
+                                            <!-- <li class="nav-item">
+                                                <a id="select_form10001" class="nav-link active" aria-current="page"
+                                                    onclick="showfundamentalForm('form10001')">monthly</a>
+                                            </li> -->
+                                        </ul>
+                                        <form id="choose_table2"></form>
+                                    </div>
+                                    <div id="extreme"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <form id="main">
+                                    <div class="card text-center" style="width:80%;">
+                                        <div class="card-header">
+                                            以下條件有項<input id="or_num" name="or_num" type="text" min=0 max=10 step=1 value="0"
+                                                onpaste="return false" onkeypress="restrictInput(event, 'int')"
+                                                style='width:5%'>符合
+                                        </div>
+                                        <div class="card-body">
+                                            <blockquote class="blockquote mb-0">
+                                                <div class="pre-scrollable"
+                                                    style="overflow:scroll; overflow-x:auto; width:90%; height:300px; margin-left: 5%;"
+                                                    id="or_filter"></div>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                    <div class="card text-center" style="width:80%;">
+                                        <div class="card-header">
+                                            以下條件都符合
+                                        </div>
+                                        <div class="card-body">
+                                            <blockquote class="blockquote mb-0">
+                                                <div class="pre-scrollable"
+                                                    style="overflow:scroll; overflow-x:auto; width:90%; height:300px; margin-left: 5%;"
+                                                    id="main_filter"></div>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+        
+                                    
+                                    <div class="card text-center" style="width:80%;">
+                                        <div class="card-header">排除以下條件</div>
+                                        <div class="card-body">
+                                            <blockquote class="blockquote mb-0">
+                                                <div class="pre-scrollable"
+                                                    style="overflow:scroll; overflow-x:auto; width:90%; height:300px; margin-left: 5%;"
+                                                    id="not_filter"></div>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                    <input type="text" id="select_date" name="daterange" value="05/01/2023 - 05/09/2023" style='display: none;'/>
+                                    <input type="date" id = "select_one_date", name="select_one_date">
+        
+                                    <div id="all_extreme_choose" class="card-body"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <button type="button" class="btn btn-secondary" id="submit" style='display: block;'>
+                            Search
+                        </button>
+                        <div id = "loading" style='display: none; justify-content: center; align-items: center;'>
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+        
+                        <button type="button" id="show_code" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#codeModal" style='display: block;'>
+                            show code
+                        </button>
+                        <button type="button" id="save" class="btn btn-success"  data-bs-toggle="modal"
+                        data-bs-target="#saveModal" style='display: block;'>
+                            save strategy
+                        </button>
+                    </div>
+                     <!-- detail table -->
+                     <div class="card-body" id="table_place"></div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="codeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">code</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="code_place"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="copy_code" class="btn btn-primary"
+                                        onclick="copyEvent('code_place')">copy</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <!-- Modal -->
+                    <div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">save</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="save_setting">
+                                        <div>策略名稱：<input type="text" id="strategy_name"></div>
+                                        <div style="display:none">追蹤：<input id="tracker_button" type="checkbox" data-toggle="switchbutton" checked data-size="sm"></div>
+                                    </div>
+                                    <div id="status"></div>
+                                    <div class="modal-footer">
+                                        <button type="button" id="save_filter" class="btn btn-primary" >Save</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> {% endcomment %}
+            {% comment %} 5.River {% endcomment %}
+            <div id="river" class="tab-content mt-3 d-none">
+                <div class="card" style="width: 80%; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                    <div class="card-header bg-primary text-white" style="border-radius: 8px 8px 0 0;">
+                        <h4 style="text-align: left; margin: 0;">
+                            <b><i class="fas fa-user-cog"></i> Fill the Form</b>
+                        </h4>
+                    </div>
+                    <!--River form Content-->
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <div class="row" style="width: 100%; margin-top: 20px;">
+                                <div class="col-md-6" style="margin-bottom: 20px;">
+                                    <label class="d-block" for="stock1-distance" style="font-weight: bold;">Stock Name</label>
+                                    <input class="form-control text-center" style="width: 50%; margin: 0 auto;" type="text" id="stock1-distance" value="AAPL" required>
+                                    
+                                
+                    
+                                    <label class="d-block mt-4" for="time_unit" style="font-weight: bold;">Time Unit</label>
+                                    <select class="form-control text-center" style="width: 50%; margin: 0 auto;" id="time_unit">
+                                        <option value="MONTH">Month</option>
+                                        <option value="QUAR">Quarter</option>
+                                        <option value="YEAR">Year</option>
+                                    </select>
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted text-center" style="border-radius: 0 0 8px 8px;">
+                    <button class="btn btn-primary mr-2" id="river_submit" type="button">Submit</button>
+                    <button class="btn btn-success" id="river_add_track" type="button">Add Track</button>
+            
+                    <div class="circle mt-3" id="river_circle" style="display: none;">
+                        <div class="spinner-border text-primary"></div>
+                        <span class="load">Wait for searching...</span>
+                    </div>
+                </div>
+            </div>
+            {% comment %} Next HW {% endcomment %}
+        {% comment %} </div>    {% endcomment %}
     </body>
 
 </html>
