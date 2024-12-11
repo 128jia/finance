@@ -430,6 +430,10 @@ $.ajaxSetup({
           loadOtherMethod();
       } else if (target === "#backtrader") {
           loadBacktrader();
+      }else if(target === "#finlab"){
+          loadFinlab();
+      }else if(target ==="#river"){
+          loadRiver();
       }
   });
         loadDistanceMethod();
@@ -607,8 +611,8 @@ $.ajaxSetup({
                     $(nRow).find("td:eq(0)").css("background-color", "paleturquoise");
                     $(nRow).find("td:eq(1)").css("background-color", "paleturquoise");
                   } else {
-                    $(nRow).find("td:eq(0)").css("background-color", "MistyRose");
-                    $(nRow).find("td:eq(1)").css("background-color", "MistyRose");
+                    $(nRow).find("td:eq(0)").css("background-color", "ime");
+                    $(nRow).find("td:eq(1)").css("background-color", "ime");
                   }
                 },
               });
@@ -650,8 +654,8 @@ $.ajaxSetup({
                     $(nRow).find("td:eq(0)").css("background-color", "paleturquoise");
                     $(nRow).find("td:eq(1)").css("background-color", "paleturquoise");
                   } else {
-                    $(nRow).find("td:eq(0)").css("background-color", "MistyRose");
-                    $(nRow).find("td:eq(1)").css("background-color", "MistyRose");
+                    $(nRow).find("td:eq(0)").css("background-color", "ime");
+                    $(nRow).find("td:eq(1)").css("background-color", "ime");
                   }
                 },
               });
@@ -838,7 +842,51 @@ function loadBacktrader(){
         });
     });
 }
+// <!--finlab-->
+function loadFinlab(){
 
+}
+// <!--River-->
+function loadRiver(){
+  $("#river_submit").on("click", function (e) {
+    // 收集表單數據
+    e.preventDefault();
+    const stockCode = $("#stock_code").val();
+    const timeUnit = $("#time_unit").val().toUpperCase(); // 轉為大寫
+
+    // 驗證表單數據
+    // if (!stockCode || !timeUnit) {
+    //     alert("Stock Code 和 Time Unit 均為必填！");
+    //     return;
+    // }
+
+    // 準備提交數據的結構
+    const requestData = {
+        stockCode: stockCode,
+        timeUnit: timeUnit,
+    };
+
+    console.log("提交數據：", requestData);
+
+    // 發送數據到伺服器
+    $.ajax({
+        url: "river/",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(requestData),
+        success: function (response) {
+            // 處理成功回應
+            console.log("伺服器回應：", response);
+            alert("提交成功！");
+        },
+        error: function (xhr, status, error) {
+            // 處理錯誤回應
+            console.error("提交失敗：", error);
+            alert("提交失敗，請檢查網路或伺服器狀態！");
+        },
+    });
+});
+}
 function renderDatatable(tradeResults) {
   $('#rsitable').DataTable({
       destroy: true,

@@ -64,16 +64,16 @@
                 <div class="nav-item">
                     <button class="nav-link" id="backtrader-tab" data-target="#backtrader" style="background-color: #1E90FF; color: white;">Backtrader</button>
                 </div>
-                {% comment %} <div class="nav-item">
+                <div class="nav-item">
                     <button class="nav-link" id="finlab-tab" data-target="#finlab" style="background-color: #1E90FF; color: white;">Finlab</button>
                 </div>
                 <div class="nav-item">
                     <button class="nav-link" id="river-tab" data-target="#river" style="background-color: #1E90FF; color: white;">river</button>
-                </div> {% endcomment %}
+                </div> 
             </div>  
             {% comment %} 1.Distance Method   {% endcomment %}
-            <div class=" tab-content col-18 mx-auto" id ="distance-method">
-                <div class="card tab-content" style="width: 80%; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" id ="distance-method">
+            <div id ="distance-method" class=" tab-content col-18 mx-auto" >
+                <div class="card " style="width: 80%; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                     <div class="card-header bg-primary text-white" style="border-radius: 8px 8px 0 0;">
                         <h4 style="text-align: left; margin: 0;">
                             <b><i class="fas fa-user-cog"></i> Fill the Form</b>
@@ -550,7 +550,7 @@
                             <div class="row" style="width: 100%; margin-top: 20px;">
                                 <div class="col-md-6" style="margin-bottom: 20px;">
                                     <label class="d-block" for="stock1-distance" style="font-weight: bold;">Stock Name</label>
-                                    <input class="form-control text-center" style="width: 50%; margin: 0 auto;" type="text" id="stock1-distance" value="AAPL" required>
+                                    <input class="form-control text-center" style="width: 50%; margin: 0 auto;" type="text" id="stock_code" value="2230" required>
                                     
                                 
                     
@@ -576,6 +576,7 @@
                         <span class="load">Wait for searching...</span>
                     </div>
                 </div>
+
             </div>
             {% comment %} Next HW {% endcomment %}
         {% comment %} </div>    {% endcomment %}

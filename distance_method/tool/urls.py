@@ -8,6 +8,7 @@ urlpatterns = [
     #path('ajax_data/', views.ajax_data),
     path('rsi_cross_ajax/', views.rsi_cross_ajax),
     path('run_strategy/', views.run_strategy),
+    path('river/',views.get_per_river_data),
     
 
     
