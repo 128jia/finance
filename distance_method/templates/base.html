@@ -27,6 +27,8 @@
         <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
         <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
         <script src="https://code.highcharts.com/stock/modules/accessibility.js"></script>
+        <script src="https://code.highcharts.com/highcharts-more.js"></script>
+        <script src="https://code.highcharts.com/stock/modules/drag-panes.js"></script>
 
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js"></script>
@@ -35,13 +37,6 @@
         <!-- DataTables -->
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
-
-        <script src="https://code.highcharts.com/stock/highstock.js"></script>
-        <script src="https://code.highcharts.com/stock/modules/data.js"></script>
-        <script src="https://code.highcharts.com/stock/modules/drag-panes.js"></script>
-        <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
-        <script src="https://code.highcharts.com/stock/modules/accessibility.js"></script>
-        <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
   
         {% csrf_token %}
         <script>
@@ -118,9 +113,7 @@
                         </div>
                     </div>
                 </div>
-                
                 <br>
-                
                 <!-- Startegy Signals -->
                 <div id="" class="card distance_result" style="display: none; width: 80%;"> 
                     <div class="card-header">
@@ -550,7 +543,7 @@
                             <div class="row" style="width: 100%; margin-top: 20px;">
                                 <div class="col-md-6" style="margin-bottom: 20px;">
                                     <label class="d-block" for="stock1-distance" style="font-weight: bold;">Stock Name</label>
-                                    <input class="form-control text-center" style="width: 50%; margin: 0 auto;" type="text" id="stock_code" value="2230" required>
+                                    <input class="form-control text-center" style="width: 50%; margin: 0 auto;" type="text" id="stock_code" value="2330" required>
                                     
                                 
                     
@@ -576,10 +569,14 @@
                         <span class="load">Wait for searching...</span>
                     </div>
                 </div>
+                <div id="river_container" style="width: 80%; height: 400px; margin: 0 auto;"></div>
+                <div id="Kline_container" style="height: 600px; width: 90%; margin: 0 auto;"></div>
+                
 
             </div>
+            
             {% comment %} Next HW {% endcomment %}
-        {% comment %} </div>    {% endcomment %}
+         </div>   
     </body>
 
 </html>

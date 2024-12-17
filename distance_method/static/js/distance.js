@@ -846,19 +846,19 @@ function loadBacktrader(){
 function loadFinlab(){
 
 }
-// <!--River-->
+//<!--River-->
 function loadRiver(){
-  $("#river_submit").on("click", function (e) {
+  // $(window).on("resize", function () {
+  //   if ($('#river_container').highcharts()) {
+  //       $('#river_container').highcharts().reflow();
+  //   }
+  // });
+  $("#river").removeClass("d-none");
+  $("#river_submit").off("click").on("click", function (e) {
     // 收集表單數據
     e.preventDefault();
     const stockCode = $("#stock_code").val();
-    const timeUnit = $("#time_unit").val().toUpperCase(); // 轉為大寫
-
-    // 驗證表單數據
-    // if (!stockCode || !timeUnit) {
-    //     alert("Stock Code 和 Time Unit 均為必填！");
-    //     return;
-    // }
+    const timeUnit = $("#time_unit").val().toUpperCase(); 
 
     // 準備提交數據的結構
     const requestData = {
@@ -875,10 +875,163 @@ function loadRiver(){
         contentType: "application/json",
         data: JSON.stringify(requestData),
         success: function (response) {
-            // 處理成功回應
-            console.log("伺服器回應：", response);
-            alert("提交成功！");
-        },
+          // 處理成功回應
+          console.log("伺服器回應：", response);
+          // alert("提交成功！");
+          //本益比河流圖
+
+           
+          // 定義變數
+          let down_cheap = response['down_cheap'];                // 便宜價區間
+          let cheap_reasonable = response['cheap_reasonable'];    // 便宜到合理價區間
+          let reasonable_expensive = response['reasonable_expensive']; // 合理到昂貴價區間
+          let up_expensive = response['up_expensive'];            // 昂貴價區間
+          const newPrice = response['NewPrice'];                    // 最新價格點
+          let point2 = (down_cheap*1 + cheap_reasonable*1); 
+          let point3 = (point2*1 + reasonable_expensive*1);
+          let point4 = (point3*1 + up_expensive*1);
+
+          const klineData = response['Kline'];
+          const data1 =response['data1'];
+          const data2 =response['data2'];
+          const data3 =response['data3'];
+          const data4 =response['data4'];
+          const data5 =response['data5'];
+          const data6 =response['data6'];
+          const ohlc = klineData.map(item => [new Date(item[0]).getTime(), parseInt(item[2]), parseInt(item[3]), parseInt(item[4]), parseInt(item[5])]);
+          const trend1 = data1.map(item => [new Date(item[0]).getTime(), parseFloat(item[1])]);
+          const trend2 = data2.map(item => [new Date(item[0]).getTime(), parseFloat(item[1])]);
+          const trend3 = data3.map(item => [new Date(item[0]).getTime(), parseFloat(item[1])]);
+          const trend4 = data4.map(item => [new Date(item[0]).getTime(), parseFloat(item[1])]);
+          const trend5 = data5.map(item => [new Date(item[0]).getTime(), parseFloat(item[1])]);
+          const trend6 = data6.map(item => [new Date(item[0]).getTime(), parseFloat(item[1])]);
+
+          console.log(`down_cheap is ${down_cheap}`);
+          console.log(`cheap_reasonable is = ${point2}`);
+          console.log(`reasonable_expensive = ${point3}`);
+          console.log(`up_expensive = ${point4}`);
+          // 繪製 Highcharts 河流圖
+          setTimeout(function () {
+            Highcharts.chart('river_container', {
+                chart: {
+                    type: 'columnrange',
+                    inverted: true // 水平顯示
+                },
+                title: {
+                    text: '本益比河流圖結果'
+                },
+                xAxis: {
+                    categories: ['本益比河流圖'],
+                    title: {
+                        text: null
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: '價格區間'
+                    },
+                    min: 0,
+                    max: up_expensive + 200 // 動態設定最大值
+                },
+                plotOptions: {
+                    columnrange: {
+                        grouping: false
+                    }
+                },
+                series: [
+                    {
+                        name: '昂貴價區間',
+                        data: [[point3, point4]],
+                        color: '#FF0000' // 紅色
+                    },
+                    {
+                        name: '合理到昂貴價區間',
+                        data: [[point2, point3]],
+                        color: '#FF9999' // 淺紅色
+                    },
+                    {
+                        name: '便宜到合理價區間',
+                        data: [[down_cheap*1, point2]],
+                        color: 'rgba(0, 128, 0, 0.7)'
+                    },
+                    {
+                        name: '便宜價區間',
+                        data: [[0, down_cheap]],
+                        color: '#FFFF00' // 黃色
+                    },
+                    {
+                        name: '最新價格',
+                        type: 'scatter',
+                        data: [[0, newPrice]],
+                        color: 'black',
+                        marker: {
+                            symbol: 'circle',
+                            radius: 6
+                        },
+                        tooltip: {
+                            pointFormat: '最新價格: {point.y}'
+                        }
+                    }
+                ]
+            });
+            //kline chart
+            Highcharts.stockChart('Kline_container', {
+              rangeSelector: { selected: 6 },
+              title: { text: 'K線圖及趨勢線' },
+              xAxis: { type: 'datetime' },
+              yAxis: { title: { text: '價格' } },
+              series: [
+                  {
+                      type: 'candlestick',
+                      name: 'K線',
+                      data: ohlc,
+                      color: 'red',
+                      upColor: 'green'
+                  },
+                  {
+                      type: 'line',
+                      name: '15X',
+                      data: trend1,
+                      color: '#8B0000'
+                  },
+                  {
+                      type: 'line',
+                      name: '17.4X',
+                      data: trend2,
+                      color: '#000000'
+                  },
+                  {
+                      type: 'line',
+                      name: '19.8X',
+                      data: trend3,
+                      color: '#32CD32'
+                  },
+                  {
+                      type: 'line',
+                      name: '22.2X',
+                      data: trend4,
+                      color: '#FFA500'
+                  },
+                  {
+                      type: 'line',
+                      name: '24.6X',
+                      data: trend5,
+                      color: '#4169E1'
+                  },
+                  {
+                      type: 'line',
+                      name: '27X',
+                      data: trend6,
+                      color: '#DC143C'
+                  }
+              ]
+          });
+          
+          
+
+          },300);
+          //繪製Highchart K線圖
+      },
         error: function (xhr, status, error) {
             // 處理錯誤回應
             console.error("提交失敗：", error);
@@ -887,6 +1040,7 @@ function loadRiver(){
     });
 });
 }
+// 以下為other Method的函式
 function renderDatatable(tradeResults) {
   $('#rsitable').DataTable({
       destroy: true,
@@ -908,7 +1062,7 @@ function renderDatatable(tradeResults) {
   });
 }
 
-// 渲染報酬率和最大回撤圖表
+// 以下為other Method的函式
 function renderProfitDrawdownChart(data) {
   Highcharts.stockChart('container', {
       title: {
@@ -942,7 +1096,7 @@ function renderProfitDrawdownChart(data) {
       }]
   });
 }
-
+// 以下為other Method的函式
 function renderNewChart(buyDates, sellDates, ohlc, volume) {
 
   Highcharts.stockChart('container2', {
@@ -1016,7 +1170,7 @@ function renderNewChart(buyDates, sellDates, ohlc, volume) {
   });
 }
 
-// 渲染績效數據
+// 以下為other Method的函式
 function renderPerformanceMetrics(metrics) {
   const metricsHtml = `
       <table style="width: 100%; border-collapse: collapse;">

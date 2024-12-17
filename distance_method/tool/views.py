@@ -387,6 +387,7 @@ def get_per_river_data(request):
             if time_unit == "QUARTER":
                 time_unit = "QUAR"  # 將 quarter 替換為 quar
             print("時間單位",time_unit)
+            print(f"股票代號{stock_code}")
             # 確保參數完整
             if not stock_code or not time_unit:
                 return JsonResponse({"error": "Missing parameters"}, status=400)
