@@ -23,13 +23,9 @@
 
         <!-- Custom JS -->
         <script type="text/javascript" src="{% static 'js/distance.js' %}"></script>
+        
+       
 
-        <!-- highcharts -->
-        <script src="https://code.highcharts.com/stock/highstock.js"></script>
-        <script src="https://code.highcharts.com/stock/modules/data.js"></script>
-        <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
-        <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
-        <script src="https://code.highcharts.com/stock/modules/accessibility.js"></script>
 
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js"></script>
@@ -38,7 +34,7 @@
         <!-- DataTables -->
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
-
+         <!-- highcharts -->
         <script src="https://code.highcharts.com/stock/highstock.js"></script>
         <script src="https://code.highcharts.com/stock/modules/data.js"></script>
         <script src="https://code.highcharts.com/stock/modules/drag-panes.js"></script>
@@ -65,8 +61,21 @@
                 <div class="nav-item">
                     <button class="nav-link" id="backtrader-tab" data-target="#backtrader" style="background-color: #1E90FF; color: white;">Backtrader</button>
                 </div>
+                <div class="nav-item">
+                    <button class="nav-link" id="river-tab" data-target="#river" style="background-color: #1E90FF; color: white;">river</button>
+                </div>
+                <!-- <div class="nav-item">
+                    <button class="nav-link" id="stockpricing-tab" data-target="#stockpricing" style="background-color: #1E90FF; color: white;">Stock Pricing</button>
+                </div> -->
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/stockpricing/' %}active{% endif %}" href="{% url 'stock_pricing' %}" style="background-color: #1E90FF; color: white;">
+                        Stock Pricing
+                    </a>
+                </li>
+                
+
             </div>  
-            {% comment %} Distance Method   {% endcomment %}
+            <!-- Distance Method  -->
             <div class="tab-content col-18 mx-auto" id ="distance-method">
                 <div class="card" style="width: 80%; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                     <div class="card-header bg-primary text-white" style="border-radius: 8px 8px 0 0;">
@@ -74,7 +83,7 @@
                             <b><i class="fas fa-user-cog"></i> Fill the Form</b>
                         </h4>
                     </div>
-                    {% comment %} Distance Form {% endcomment %}
+                    <!-- Distance Form  -->
                     <div class="card-body">
                         <div class="container-fluid">
                             <div class="row" style="width: 100%; margin-top: 20px;">
@@ -353,29 +362,114 @@
                         <table id="transactions-table" class="display" style="width:100%"></table>
                     </div>
                 </div>
-            </div>
+            
 
-            <!-- Backtrader -->
-            <div id="gogoro" class="tab-content mt-3 d-none">
-                <div class="card">
-                    <div class="card-header fs-5 fw-bold">gogoro Form</div>
-                    <div class="card-body">
-                        <p>Is up to new stragetegy.</p>
-                        <!-- Add Backtrader-specific content here -->
+                <!-- Backtrader -->
+                <div id="gogoro" class="tab-content mt-3 d-none">
+                    <div class="card">
+                        <div class="card-header fs-5 fw-bold">gogoro Form</div>
+                        <div class="card-body">
+                            <p>Is up to new stragetegy.</p>
+                            <!-- Add Backtrader-specific content here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Backtrader -->
+                <div id="backtrader" class="tab-content mt-3 d-none">
+                    <div class="card">
+                        <div class="card-header fs-5 fw-bold">next Form</div>
+                        <div class="card-body">
+                            <p>Is up to new stragetegy.</p>
+                            <!-- Add Backtrader-specific content here -->
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Backtrader -->
-            <div id="backtrader" class="tab-content mt-3 d-none">
-                <div class="card">
-                    <div class="card-header fs-5 fw-bold">next Form</div>
+             <!--5.River-->
+            <div id="river" class="tab-content mt-3 d-none">
+                <div class="card" style="width: 80%; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                    <div class="card-header bg-primary text-white" style="border-radius: 8px 8px 0 0;">
+                        <h4 style="text-align: left; margin: 0;">
+                            <b><i class="fas fa-user-cog"></i> Fill the Form</b>
+                        </h4>
+                    </div>
+                    <!--River form Content-->
                     <div class="card-body">
-                        <p>Is up to new stragetegy.</p>
-                        <!-- Add Backtrader-specific content here -->
+                        <div class="container-fluid">
+                            <div class="row" style="width: 100%; margin-top: 20px;">
+                                <div class="col-md-6" style="margin-bottom: 20px;">
+                                    <label class="d-block" for="stock1-distance" style="font-weight: bold;">Stock Name</label>
+                                    <input class="form-control text-center" style="width: 50%; margin: 0 auto;" type="text" id="stock_code" value="2230" required>
+                                    
+                                
+                    
+                                    <label class="d-block mt-4" for="time_unit" style="font-weight: bold;">Time Unit</label>
+                                    <select class="form-control text-center" style="width: 50%; margin: 0 auto;" id="time_unit">
+                                        <option value="MONTH">Month</option>
+                                        <option value="QUAR">Quarter</option>
+                                        <option value="YEAR">Year</option>
+                                    </select>
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted text-center" style="border-radius: 0 0 8px 8px;">
+                    <button class="btn btn-primary mr-2" id="river_submit" type="button">Submit</button>
+                    <button class="btn btn-success" id="river_add_track" type="button">Add Track</button>
+                    <div class="circle mt-3" id="river_circle" style="display: none;">
+                        <div class="spinner-border text-primary"></div>
+                        <span class="load">Wait for searching...</span>
+                    </div>
+                </div>
+                <div id="river_container" style="width: 80%; height: 400px; margin: 0 auto;"></div>
+
+
+            </div>
+            <!-- 6.stockpricing -->
+            <div class="container tab-content mt-3 d-none" id="stockpricing"> 
+                <div class="card mt-3"> <!-- 控制卡片的最大宽度 -->
+                    <div class="card-header fs-5 fw-bold">
+                        Stock Pricing
+                    </div>
+                    <div class='card-body'>
+                        <form id="ajax_form">
+                            {% csrf_token %}
+                            <!-- 股票代號和策略選擇 -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="ticker" class="form-label">輸入股票代號:</label>
+                                        <input type="text" class="form-control" id="ticker" name="ticker" value="1303">
+                                    </div>
+                                </div>
+            
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="years" class="form-label">歷史幾年資料:</label>
+                                        <select id="years" name="years" class="form-select">
+                                            <option value="5">5</option>
+                                            <option value="10" selected>10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <button class="btn btn-secondary mt-3" id="search_stock" style="background-color: #1E90FF; color: #ffffff; border: none; font-weight: bold;">Search</button>
+                        <hr>
+                        <h3>最新價格: <span id="current-price"></span></h3>
+                        <hr>
+                        <div id="highcharts-container" style="width: 100%; height: 500px;"></div>
+                        <div id="table_container" style="width: 100%; height: 500px;"></div>
                     </div>
                 </div>
             </div>
+            <!--Next HW-->
         </div>   
     </body>
 

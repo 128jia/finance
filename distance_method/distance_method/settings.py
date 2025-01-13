@@ -13,7 +13,15 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import json
-
+import psycopg2
+# conn = psycopg2.connect(
+#     dbname='distance_method',
+#     user='Tommy',
+#     password='900128',
+#     host='172.17.0.2',
+#     port='5432'
+# )
+# print('db connected!')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,7 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tool',
-    'monitor'
+    'monitor',
+    'stockPricing',
 ]
 
 MIDDLEWARE = [
@@ -127,11 +136,11 @@ port= 5432
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'distance_method',
-        'USER': 'thomas',
-        'PASSWORD': 'AUTh6496',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME', 'distance_method'),  # 默認為 'distance_method'
+        'USER': os.getenv('DB_USER', 'Tommy'),            # 默認為 'Tommy'
+        'PASSWORD': os.getenv('DB_PASSWORD', '900128'),   # 默認為 '900128'
+        'HOST': os.getenv('DB_HOST', 'localhost'),      # 默認為 'postgres_db'，可以替換成 Docker 服務名稱
+        'PORT': os.getenv('DB_PORT', '5432'),             # 默認為 5432
     }
 }
 

@@ -1,0 +1,6 @@
+說明：
+requirement2.txt 之中發生錯誤，如下
+
+ > [4/4] RUN ["pip3", "install", "-r", "requirement2.txt"]:
+2.785 ERROR: ta_lib-0.5.1-cp312-cp312-win_amd64.whl is not a supported wheel on this platform.
+

@@ -100,31 +100,14 @@ WSGI_APPLICATION = 'accounts.wsgi.application'
 # else:
 #     raise EnvironmentError("Unknown environment! Please set the 'ENV' variable to 'production' or 'development'.")
 
-
-# DATABASES = {
-#      'default': {
-
-#         'ENGINE': 'django.db.backends.postgresql',
-
-#         'NAME': database,
-
-#         'USER': user,
-
-#         'PASSWORD': password,
-
-#         'HOST': host,
-
-#         'PORT': port,
-#     }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'distance_method',
-        'USER': 'thomas',
-        'PASSWORD': 'AUTh6496',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('DB_NAME', 'distance_method'),  # 默認為 'distance_method'
+        'USER': os.getenv('DB_USER', 'Tommy'),            # 默認為 'Tommy'
+        'PASSWORD': os.getenv('DB_PASSWORD', '900128'),   # 默認為 '900128'
+        'HOST': os.getenv('DB_HOST', 'localhost'),      # 默認為 'postgres_db'，可以替換成 Docker 服務名稱
+        'PORT': os.getenv('DB_PORT', '5432'),             # 默認為 5432
     }
 }
 

@@ -619,7 +619,7 @@ $.ajaxSetup({
     $("#function-tabs .nav-link").click(function () {
         // 獲取當前點擊的按鈕的 target (對應的功能區塊)
         const target = $(this).data("target");
-
+        console.log(target);
         // 1. 移除所有按鈕的 active 樣式
         $("#function-tabs .nav-link").removeClass("active");
 
@@ -638,12 +638,15 @@ $.ajaxSetup({
             loadOtherMethod();
         } else if (target === "#backtrader") {
             loadBacktrader();
+        } else if (target === "#stockpricing") {
+            loadpricingMethod();
+            console.log("stockpricing");
         }
     });
 
     // 預設載入 Distance Method
-    // loadDistanceMethod();
-}); 
+    loadDistanceMethod();
+  }); 
 //<!--Distance Method-->
 function loadDistanceMethod() {
 
@@ -989,3 +992,4 @@ function renderPerformanceMetrics(metrics) {
   `;
   $('#performance-table').html(metricsHtml);  // 更新績效表格內容
 }
+

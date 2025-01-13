@@ -39,12 +39,13 @@ class ConnectUserDB(object):
                                         # host =  "localhost")
         # else:
         #     raise EnvironmentError("Unknown environment! Please set the 'ENV' variable to 'production' or 'development'.")
-        self.db_conn = psycopg2.connect(
-                                        database =  "distance_method",
-                                        user =  "thomas",
-                                        password =  "AUTh6496",
-                                        port= 5432
-                                        )
+        self.db_conn =  psycopg2.connect(
+        database="distance_method",  # 資料庫名稱
+        user="Tommy",                # 使用者名稱
+        password="900128",           # 密碼
+        host="localhost",            # 主機名，Docker 中可能為 'localhost' 或容器 IP
+        port=5432                    # 埠號
+    )
         
         self.db_cursor = self.db_conn.cursor()
 

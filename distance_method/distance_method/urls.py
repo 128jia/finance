@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('correlation/', include('tool.urls')),
     path('monitor/', include('monitor.urls')),
+    path('stockpricing/', include('stockPricing.urls')),
 ]

@@ -27,8 +27,12 @@ $(document).ready(function () {
             loadOtherMethod();
         } else if (target === "#backtrader") {
             loadBacktrader();
+        } else if(target ==="#river"){
+            loadRiver();
         }
+  
     });
+    loadDistanceMethod();
 
     // 預設載入 Distance Method
     // loadDistanceMethod();
@@ -167,6 +171,99 @@ function loadBacktrader(){
             error: function (error) {
                 console.error('Error fetching strategy result:', error);
             }
+        });
+    });
+}
+function loadRiver() {
+    $("#river_submit").on("click", function (e) {
+        e.preventDefault(); // 阻止預設提交行為
+
+        // 收集表單數據
+        const stockCode = $("#stock_code").val();
+        const timeUnit = $("#time_unit").val().toUpperCase();
+
+        // 組裝數據
+        const requestData = {
+            stockCode: stockCode,
+            timeUnit: timeUnit,
+        };
+
+        console.log("提交數據：", requestData);
+
+        // 發送請求
+        $.ajax({
+            url: "river/",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
+            success: function (response) {
+                console.log("伺服器回應：", response);
+
+                // 解析回應數據
+                const down_cheap = response['down_cheap'];
+                const cheap_reasonable = response['cheap_reasonable'];
+                const reasonable_expensive = response['reasonable_expensive'];
+                const up_expensive = response['up_expensive'];
+                const newPrice = response['NewPrice'];
+
+                // 繪製 Highcharts 河流圖
+                if ($("#river_container").length > 0) { // 確保容器存在
+                    Highcharts.chart('river_container', {
+                        chart: { type: 'columnrange', inverted: true },
+                        title: { text: '本益比河流圖結果' },
+                        xAxis: {
+                            categories: ['本益比河流圖'],
+                            title: { text: null }
+                        },
+                        yAxis: {
+                            title: { text: '價格區間' },
+                            min: 0,
+                            max: up_expensive + 200
+                        },
+                        series: [
+                            {
+                                name: '昂貴價區間',
+                                data: [[cheap_reasonable, up_expensive]],
+                                color: '#FF0000'
+                            },
+                            {
+                                name: '合理到昂貴價區間',
+                                data: [[reasonable_expensive, cheap_reasonable]],
+                                color: '#FF9999'
+                            },
+                            {
+                                name: '便宜到合理價區間',
+                                data: [[down_cheap, reasonable_expensive]],
+                                color: '#00FF00'
+                            },
+                            {
+                                name: '便宜價區間',
+                                data: [[0, down_cheap]],
+                                color: '#FFFF00'
+                            },
+                            {
+                                name: '最新價格',
+                                type: 'scatter',
+                                data: [[0, newPrice]],
+                                color: 'black',
+                                marker: {
+                                    symbol: 'circle',
+                                    radius: 6
+                                },
+                                tooltip: {
+                                    pointFormat: '最新價格: {point.y}'
+                                }
+                            }
+                        ]
+                    });
+                } else {
+                    console.error("Error: 容器 #river_container 不存在");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("提交失敗：", error);
+                alert("提交失敗，請檢查網路或伺服器狀態！");
+            },
         });
     });
 }

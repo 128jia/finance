@@ -1,90 +1,67 @@
 
-services:
-  Auth:
-    build: ./accounts
-    image: distance_account
-    container_name: Auth
-    restart: always
-    ports:
-      - 1984:1984
-    environment:
-      USER_DB_HOST: mysql
-      USER_DB_NAME: distance_method
-      USER_DB_USER: thomas
-      USER_DB_PASSWORD: AUTh6496
-      USER_DB_PORT: 3306
-      AUTH_PATH: http://127.0.0.1:1984/account/
-      WEB_PATH: http://127.0.0.1:1985/correlation/
-      PYTHONUNBUFFERED: 1
-    depends_on:
-      - mysql  # 確保 Web 在 mysql 服務之後啟動
 
+services:
+  postgres_DB:
+    image: postgres
+    container_name: postgres_DB
+    restart: always
+    environment:
+      POSTGRES_USER: tommy
+      POSTGRES_PASSWORD: 900128
+      postgres_DB: distance_method
+    ports:
+      - "5432:5432"
+    volumes:
+      - /Users/chenyanjia/DB/postgre:/var/lib/postgresql/data
+
+  Web:
+    build: ./distance_method
+    container_name: Distance
+    image: distance:v1
+    restart: always
+  
+    ports:
+      - "1985:1985"
+    depends_on:
+      - postgres_DB
+    environment:
+      DATABASE_HOST: postgres_DB
+      DATABASE_PORT: 5432
+      DATABASE_NAME: distance_method
+      DATABASE_USER: tommy
+      DATABASE_PASSWORD: 900128
+    #將資料從本機掛載
+    volumes:
+      - /Users/chenyanjia/MyDjango/mydjango/finance/distance_method/common/tracker_results:/app/tracker_results
+  accounts:
+    build: ./accounts
+    image: accounts:1
+    container_name: accounts
+    restart: always
+  
+    ports:
+      - "1984:1984"
+    depends_on:
+      - postgres_DB
+    environment:
+      DATABASE_HOST: postgres_DB
+      DATABASE_PORT: 5432
+      DATABASE_NAME: distance_method
+      DATABASE_USER: tommy
+      DATABASE_PASSWORD: 900128
+      AUTH_PATH: http://0.0.0.0:1984/account/
+      WEB_PATH: http://0.0.0.0:1985/correlation/
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ./accounts:/app
   FuncAPI:
     build: ./function_api
-    image: distance_func_api
+    image: func_api:v1
     container_name: FuncAPI
     restart: always
     ports: 
       - 1986:1986
     environment:
-      DATA_API_ROOT: https://cosbi5.ee.ncku.edu.tw/usData/
-      DATA_API_USER: searchfunc
-      DATA_API_PASSWORD: scbdfunc*
       PYTHONUNBUFFERED: 1
-    depends_on:
-      - mysql  # 確保 Web 在 mysql 服務之後啟動
-      
-  Web:
-    build: ./distance_method
-
-    # 來自Docker Hub的映像檔
-    image: distance_web
-    container_name: Web
-    restart: always
-
-    # container port和主機port的配對
-    ports:
-      - 1985:1985
-
-    # 將主機的資料夾mount到container中
-    # 本地文件夾是 /home/thomas/Desktop/distance_method/distance_method/common/tracker_results, 希望將它掛載到容器內的 /app/tracker_results
-    volumes:
-      - /home/thomas/Desktop/distance_method/distance_method/common/tracker_results:/app/tracker_results
-        
-    # 環境參數
-    environment:
-      PROJECT_ENV : prod
-      DATA_API_ROOT: https://cosbi5.ee.ncku.edu.tw/usData/ 
-      DATA_API_USER: searchfunc
-      DATA_API_PASSWORD: scbdfunc*
-      ###還未找到功能
-      FUNC_API_ROOT: http://127.0.0.1:1986/usFunc/
-      ###需更改為自己的db
-      USER_DB_HOST: mysql    
-      USER_DB_NAME: distance_method
-      USER_DB_USER: thomas
-      USER_DB_PASSWORD: AUTh6496
-      USER_DB_PORT: 3306
-
-      AUTH_PATH: http://127.0.0.1:1984/account/
-      PYTHONUNBUFFERED: 1
-    depends_on:
-      - mysql  # 確保 Web 在 mysql 服務之後啟動
-  mysql:
-    image: mysql:8.0  # 使用 MySQL 8.0 映像，您可以根據需要更改版本
-    container_name: mysql
-    restart: always
-    ports:
-      - "3306:3306"  # 將 MySQL 端口 3306 映射到主機的 3306 端口
-    environment:
-      MYSQL_ROOT_PASSWORD: root_password  # MySQL root 密碼
-      MYSQL_DATABASE: distance_method     # 自動創建的資料庫名稱
-      MYSQL_USER: thomas                  # 資料庫用戶名
-      MYSQL_PASSWORD: AUTh6496            # 資料庫用戶密碼
-    volumes:
-      - mysql_data:/var/lib/mysql  # 將 MySQL 數據持久化到本地卷中
-
-# 卷定義
 volumes:
-  mysql_data:
-
+  postgres_data:
