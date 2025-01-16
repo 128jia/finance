@@ -23,4 +23,6 @@ urlpatterns = [
     path('correlation/', include('tool.urls')),
     path('monitor/', include('monitor.urls')),
     path('stockpricing/', include('stockPricing.urls')),
+    path('web_tool/', include('web_tool.urls')),
+    path('monitor1/', include('monitor1.urls')),
 ]

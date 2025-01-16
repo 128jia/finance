@@ -122,7 +122,6 @@ function renderHighcharts(data) {
         },
         yAxis: {
             min: 0,
-            max: 1200,
             title: {
                 text: "價格區間"
             },

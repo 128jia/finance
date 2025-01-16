@@ -94,9 +94,15 @@ class UserTrackingHandler(ConnectUserDB):
             # 執行 SQL 語句
             self.db_cursor.execute(sql, values)
             self.db_conn.commit()
-        except psycopg2.errors as e:
-            logger.error(f"SQL Error: {e}")
-            self.db_conn.rollback()
+        # except psycopg2.errors as e:
+        #     logger.error(f"SQL Error: {e}")
+        #     self.db_conn.rollback()
+        #     raise
+        except psycopg2.DatabaseError as e:  # 捕捉資料庫相關錯誤
+            print(f"Database error occurred: {e}")
+            raise
+        except psycopg2.OperationalError as e:  # 捕捉操作相關錯誤
+            print(f"Operational error occurred: {e}")
             raise
             
     # remove track

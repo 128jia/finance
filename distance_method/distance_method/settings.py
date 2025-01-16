@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'tool',
     'monitor',
     'stockPricing',
+    'web_tool',
+    'monitor1',
+    'ceiling',
 ]
 
 MIDDLEWARE = [

@@ -392,3 +392,4 @@ def get_per_river_data(request):
             logger.error("發生錯誤: %s", str(e))
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method"}, status=405)
+

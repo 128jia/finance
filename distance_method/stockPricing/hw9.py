@@ -296,7 +296,7 @@ class Pbr(TableDataBase):
         self.PBR_avg.reset_index(drop = True, inplace = True)
 
         self.BPS = self.PBR_table["BPS (元)"][2:self.year+1]
-        self.BPS_now = self.PBR_table["BPS (元)"][0]
+        self.BPS_now = self.PBR_table["BPS (元)"][1]
         self.BPS.reset_index(drop = True, inplace = True)
         #print(self.PBR_table)
         PBR_table_name = []
